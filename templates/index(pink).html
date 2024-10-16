@@ -1,0 +1,150 @@
+<!-- <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Nữ Giới Chung</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+        .chat-container {
+            width: 90%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #ff758c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+        .user-message {
+            background-color: #e6f3ff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #fff0f5;
+            align-self: flex-start;
+        }
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        #question {
+            flex-grow: 1;
+            padding: 12px;
+            border: 2px solid #ff758c;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        button {
+            background-color: #ff758c;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ff8da1;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Chatbot Nữ Giới Chung
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+        <form id="user-input-form" class="chat-input">
+            <input type="text" id="question" name="question" placeholder="Nhập câu hỏi của bạn..." required>
+            <button type="submit">Gửi</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('user-input-form');
+        const chatMessages = document.getElementById('chat-messages');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value;
+
+            // Add user message to chat
+            addMessage(question, 'user-message');
+            
+            // Add loading message
+            const loadingMessage = addMessage('Đang xử lý...', 'bot-message');
+
+            try {
+                const res = await fetch('/generate_content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question })
+                });
+                const data = await res.json();
+                
+                // Remove loading message
+                chatMessages.removeChild(loadingMessage);
+
+                // Add bot message to chat
+                addMessage(data.response, 'bot-message');
+            } catch (error) {
+                // Remove loading message
+                chatMessages.removeChild(loadingMessage);
+
+                addMessage('Có lỗi xảy ra. Vui lòng thử lại.', 'bot-message');
+            }
+
+            questionInput.value = '';
+        });
+
+        function addMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', className);
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv; // Return the created message element
+        }
+    </script>
+</body>
+</html> -->
