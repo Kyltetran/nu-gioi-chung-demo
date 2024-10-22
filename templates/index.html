@@ -102,12 +102,15 @@
             <!-- Messages will be dynamically added here -->
         </div>
         <form id="user-input-form" class="chat-input">
-            <input type="text" id="question" name="question" placeholder="Nhập câu hỏi của bạn..." required>
-            <button type="submit">Gửi</button>
-        </form>
+    <input type="text" id="question" name="question" placeholder="Nhập câu hỏi của bạn..." required>
+    <button type="submit">Gửi</button>
+</form>
+
+
     </div>
 
     <script>
+        
         const form = document.getElementById('user-input-form');
         const chatMessages = document.getElementById('chat-messages');
 
@@ -115,6 +118,11 @@
             event.preventDefault();
             const questionInput = document.getElementById('question');
             const question = questionInput.value;
+            const inputField = document.getElementById('question');
+            
+            // Add your form submission logic here, e.g., sending the data to the server
+    
+            inputField.value = ''; // Reset the input field after submission
 
             addMessage(question, 'user-message');
             
