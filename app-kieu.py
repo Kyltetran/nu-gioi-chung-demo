@@ -12,24 +12,35 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 
 # Load CSV data
-def load_csv(file_path):
-    data = []
+# def load_csv(file_path):
+#     data = []
+#     try:
+#         with open(file_path, "r", encoding="utf-8") as csvfile:
+#             csvreader = csv.reader(csvfile, delimiter=";")
+#             next(csvreader)  # Skip header if it exists
+#             for row in csvreader:
+#                 data.append({"subject": row[0], "content": row[1]})
+#     except FileNotFoundError:
+#         print(f"File not found: {file_path}")
+#     return data
+
+# load the txt data
+def load_txt(file_path):
     try:
-        with open(file_path, "r", encoding="utf-8") as csvfile:
-            csvreader = csv.reader(csvfile, delimiter=";")
-            next(csvreader)  # Skip header if it exists
-            for row in csvreader:
-                data.append({"subject": row[0], "content": row[1]})
+        with open(file_path, "r", encoding="utf-8") as file:
+            data = file.read()
+        return data
     except FileNotFoundError:
         print(f"File not found: {file_path}")
-    return data
+
+    return ""
 
 
 # Load the CSV data
-csv_data = load_csv("data.csv")
+csv_data = load_txt("Couplets_Table.txt")
 
 
-# Route for index page
+# Route for index pageç
 @app.route("/")
 def index():
     session.clear()  # Clear the session when starting a new conversation
@@ -59,26 +70,23 @@ def handle_generate_content():
     conversation_history = session.get("conversation_history", "")
 
     # Build the prompt using the previous conversation and CSV content
-    if not conversation_history:  # First interaction
-        prompt = f"""
-        
-        Dưới đây là tổng hợp những vấn đề được trích dẫn từ báo Nữ giới chung, hãy phân tích và học phong cách viết của những tác giả nữ của báo Nữ giới chung:
-        
-        {csv_data[0]['content']}
-        
-        Nếu tiếp theo là câu hỏi hoặc có đề cập tới vấn đề nữ quyền, vệ sinh, giáo dục, đối nhân xử thế, bạn hãy viết một bài viết ngắn về chúng (dưới 150 chữ) theo phong cách của một cây viết nữ của báo Nữ giới chung. 
-        Nếu không, hãy trả lời ngắn gọn xúc tích với phong cách của cây viết nữ của bài báo để hỏi về vấn đề tôi muốn bàn luận.
-        """
-    else:  # Continuing conversation
-        prompt = f"""
-        
+    # if not conversation_history:  # First interaction
+    prompt = f"""
+    
+    Dưới đây là bộ Truyện Kiều:
+    
+    {csv_data}
+    
+    Hãy lặp lại chính xác câu hỏi và bói Kiều bằng cách trích dẫn một câu bất kỳ trong bộ Truyện Kiều ở trên và phân tích sự liên quan của nó với câu hỏi được nhập:
+    """
+    # else:  # Continuing conversation
+    #     prompt = f"""
 
-        Bạn là Bot trong cuộc trò chuyện dưới đây.
-        {conversation_history}
-        Hãy tiếp tục cuộc trò chuyện với User:{user_input}
-        
-        
-        """
+    #     Bạn là Bot trong cuộc trò chuyện dưới đây.
+    #     {conversation_history}
+    #     Hãy tiếp tục cuộc trò chuyện với User:{user_input}
+
+    #     """
 
     # Generate a response
     generated_response = generate_content(prompt)
