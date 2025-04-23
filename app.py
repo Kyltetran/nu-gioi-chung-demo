@@ -59,12 +59,17 @@ def handle_generate_content():
     # Retrieve previous conversation history from session
     conversation_history = session.get("conversation_history", "")
 
+
+    excerpt_block = "\n\n".join(
+        [f"Chủ đề: {row['subject']}\nNội dung: {row['content']}" for row in csv_data[:20]]
+    )
+
     # Build the prompt using the previous conversation and CSV content
     if not conversation_history:  # First interaction
         prompt = f"""
         Below are excerpts from the *Nữ Giới Chung* newspaper written by Vietnamese women in the early 20th century. Analyze and learn the writing style, tone, and themes they focus on:
 
-        { "\n\n".join([f"Chủ đề: {row['subject']}\nNội dung: {row['content']}" for row in csv_data[:20]]) }
+        {excerpt_block}
 
         Now, based on the style you've just learned, respond to the following user question in Vietnamese. Keep your response short and emotional (under 150 words), reflecting the values and writing manner of *Nữ Giới Chung* writers.
 
