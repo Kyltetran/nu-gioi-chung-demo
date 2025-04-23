@@ -38,7 +38,8 @@ def index():
 
 # Function to generate content using the Gemini API
 def generate_content(prompt):
-    model = genai.GenerativeModel(model_name="gemini-1.5-pro-002")
+    print("Prompt: " + prompt)
+    model = genai.GenerativeModel(model_name="gemini-1.5-pro")
 
     # Generate the content
     response = model.generate_content(prompt)
@@ -61,24 +62,28 @@ def handle_generate_content():
     # Build the prompt using the previous conversation and CSV content
     if not conversation_history:  # First interaction
         prompt = f"""
-        
-        Dưới đây là tổng hợp những vấn đề được trích dẫn từ báo Nữ giới chung, hãy phân tích và học phong cách viết của những tác giả nữ của báo Nữ giới chung:
-        
-        {csv_data[0]['content']}
-        
-        Nếu tiếp theo là câu hỏi hoặc có đề cập tới vấn đề nữ quyền, vệ sinh, giáo dục, đối nhân xử thế, bạn hãy viết một bài viết ngắn về chúng (dưới 150 chữ) theo phong cách của một cây viết nữ của báo Nữ giới chung. 
-        Nếu không, hãy trả lời ngắn gọn xúc tích với phong cách của cây viết nữ của bài báo để hỏi về vấn đề tôi muốn bàn luận.
+        Below are excerpts from the *Nữ Giới Chung* newspaper written by Vietnamese women in the early 20th century. Analyze and learn the writing style, tone, and themes they focus on:
+
+        { "\n\n".join([f"Chủ đề: {row['subject']}\nNội dung: {row['content']}" for row in csv_data[:20]]) }
+
+        Now, based on the style you've just learned, respond to the following user question in Vietnamese. Keep your response short and emotional (under 150 words), reflecting the values and writing manner of *Nữ Giới Chung* writers.
+
+        User question:
+        {user_input}
         """
     else:  # Continuing conversation
         prompt = f"""
-        
+        You are a helpful assistant participating in the ongoing conversation below.
 
-        Bạn là Bot trong cuộc trò chuyện dưới đây.
+        Your personality and writing style are inspired by female authors from the early 20th-century Vietnamese newspaper *Nữ Giới Chung*. Keep your responses thoughtful, emotional, and concise — no more than 150 words.
+
+        Always answer in Vietnamese.
+
+        Conversation history:
         {conversation_history}
-        Hãy tiếp tục cuộc trò chuyện với User:{user_input}
-        
-        
-        """
+
+        User: {user_input}
+        Bot:"""
 
     # Generate a response
     generated_response = generate_content(prompt)
