@@ -2,6 +2,9 @@ import os
 import csv
 import google.generativeai as genai
 from flask import Flask, jsonify, request, render_template, session
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "NhuquynhNhuquynh"  # You need this for session management
